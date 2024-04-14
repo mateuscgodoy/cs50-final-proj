@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     localStorage.setItem(CATEGORIES, JSON.stringify(json.data));
-    messageUI.textContent = START_MESSAGE;
   }
 
   /**
@@ -32,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categories = JSON.parse(localStorage.getItem(CATEGORIES));
     if (!categories) return;
 
+    messageUI.textContent = START_MESSAGE;
     const frag = document.createDocumentFragment();
     const form = document.querySelector('form');
     const submitBtn = document.createElement('button');

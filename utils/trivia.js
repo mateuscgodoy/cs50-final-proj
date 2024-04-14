@@ -19,4 +19,19 @@ function processCategories(categories) {
   });
 }
 
-module.exports = { processCategories };
+async function fetchTriviaCategories() {
+  try {
+    const response = await fetch('https://opentdb.com/api_category.php');
+    if (!response.ok) {
+      throw new Error(
+        'Categories server encountered a problem. Try again later.'
+      );
+    }
+    const { trivia_categories } = await response.json();
+    return processCategories(trivia_categories);
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchTriviaCategories };

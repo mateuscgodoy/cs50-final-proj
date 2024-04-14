@@ -3,8 +3,9 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { processCategories } = require('./utils/trivia');
+const { fetchTriviaCategories } = require('./utils/trivia');
 
+const appData = {};
 const PORT = 3000;
 const app = express();
 
@@ -20,23 +21,41 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/', (req, res) => {
-  console.log(req.body);
+app.post('/', async (req, res) => {
+  // console.log(req.body);
+  try {
+    if (!appData.categories) {
+      const categories = await fetchTriviaCategories();
+      appData.categories = categories.map((category) => category.id);
+    }
+  } catch (error) {
+    console.error(error);
+    return res.redirect('/');
+  }
+  const keys = Object.keys(req.body);
+  const allValidKeys = keys.every((key) =>
+    appData.categories.includes(parseInt(key))
+  );
+  if (!allValidKeys || keys.length < 10) {
+    // TODO: Return an error message to the frontend otherwise
+    console.error('Invalid keys provided');
+    return res.redirect('/');
+  }
+  appData.userCategories = keys;
+  console.log('okay');
+  // TODO: Generate a new USER Token from Trivia API
+  // The above might need a session management.
+  // Alternatively, a /token endpoint could be set that game page will consume
+  // TODO: Redirect the user to the game page
   res.redirect('/');
 });
 
 app.get('/categories', async (req, res) => {
   try {
-    const response = await fetch('https://opentdb.com/api_category.php');
-    if (!response.ok) {
-      throw new Error(
-        'Categories server encountered a problem. Try again later.'
-      );
-    }
-    const { trivia_categories } = await response.json();
+    appData.categories = await fetchTriviaCategories();
     res.send({
       status: 200,
-      data: processCategories(trivia_categories),
+      data: appData.categories,
       message: 'Categories fetched with success.',
     });
   } catch (error) {
