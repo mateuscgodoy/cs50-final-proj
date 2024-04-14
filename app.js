@@ -47,7 +47,9 @@ app.post('/', async (req, res) => {
   // The above might need a session management.
   // Alternatively, a /token endpoint could be set that game page will consume
   // TODO: Redirect the user to the game page
-  res.redirect('/');
+  res.render('game', {
+    title: 'Trivia50 - Game',
+  });
 });
 
 app.get('/categories', async (req, res) => {
