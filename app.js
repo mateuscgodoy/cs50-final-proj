@@ -48,7 +48,7 @@ app.get('/categories', async (req, res) => {
 });
 
 app.get('/rules', (req, res) => {
-  res.render('/rules', {
+  res.render('rules', {
     title: 'Trivia50 - Rules',
   });
 });

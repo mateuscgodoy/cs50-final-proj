@@ -1,48 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('includes/head.ejs') %>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= title%>
-  </title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-</head>
+  <body>
+    <main>
+      <div>
+        <h1>Trivia50</h1>
+        <h2>Hello, and welcome! 👋</h2>
+        <p>Checkout the <a href="/rules">rules</a> page to learn more about the game.</p>
+        <p>Once you're ready, choose at least 10 Trivia categories below, and let's get started!</p>
+        <form action="/" method="post">
+          <div>
+            <input type="checkbox" autofocus value="charmander" name="charmander" id="charmander">
+            <label for="charmander">Charmander</label>
+          </div>
+          <div>
+            <input type="checkbox" value="bulbassaur" name="bulbassaur" id="bulbassaur">
+            <label for="bulbassaur">Bulbassaur</label>
+          </div>
+          <div>
+            <input type="checkbox" value="squirtle" name="squirtle" id="squirtle">
+            <label for="squirtle">Squirtle</label>
+          </div>
+          <button type="submit">Choose</button>
+        </form>
+      </div>
 
-<body>
-  <main>
-    <div>
-      <h1>Trivia50</h1>
-      <h2>Hello, and welcome! 👋</h2>
-      <p>Checkout the <a href="/rules">rules</a> page to learn more about the game.</p>
-      <p>Once you're ready, choose at least 10 Trivia categories below, and let's get started!</p>
-      <form action="/" method="post">
-        <div>
-          <input type="checkbox" autofocus value="charmander" name="charmander" id="charmander">
-          <label for="charmander">Charmander</label>
-        </div>
-        <div>
-          <input type="checkbox" value="bulbassaur" name="bulbassaur" id="bulbassaur">
-          <label for="bulbassaur">Bulbassaur</label>
-        </div>
-        <div>
-          <input type="checkbox" value="squirtle" name="squirtle" id="squirtle">
-          <label for="squirtle">Squirtle</label>
-        </div>
-        <button type="submit">Choose</button>
-      </form>
-    </div>
-
-  </main>
-  <footer>
-    <h6>Project done by Mateus Colombo Godoy, as a conclusion to <a href="https://cs50.harvard.edu/x/2024/"
-        target="_blank" rel="noopener noreferrer">CS50</a>.</h6>
-  </footer>
-</body>
-
-</html>
+    </main>
+    <%- include('includes/footer.ejs') %>
