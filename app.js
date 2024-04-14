@@ -1,34 +1,48 @@
+require('dotenv').config();
+
 const path = require('path');
 
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const { fetchTriviaCategories } = require('./utils/trivia');
+const { fetchTriviaCategories, fetchTriviaToken } = require('./utils/trivia');
 
 const appData = {};
-const PORT = 3000;
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+function hasToken(req, res, next) {
+  if (req.session.token) next();
+  else res.redirect('/');
+}
+
 app.get('/', (req, res) => {
   res.render('index', {
-    title: 'Trivia50 ❓',
+    title: 'Trivia50 - Home',
   });
 });
 
 app.post('/', async (req, res) => {
-  // console.log(req.body);
   try {
     if (!appData.categories) {
       const categories = await fetchTriviaCategories();
       appData.categories = categories.map((category) => category.id);
     }
   } catch (error) {
+    // TODO: Implement a catch all Error method.
     console.error(error);
     return res.redirect('/');
   }
@@ -42,14 +56,23 @@ app.post('/', async (req, res) => {
     return res.redirect('/');
   }
   appData.userCategories = keys;
-  console.log('okay');
-  // TODO: Generate a new USER Token from Trivia API
-  // The above might need a session management.
-  // Alternatively, a /token endpoint could be set that game page will consume
-  // TODO: Redirect the user to the game page
-  res.render('game', {
-    title: 'Trivia50 - Game',
-  });
+
+  try {
+    const token = await fetchTriviaToken();
+
+    req.session.regenerate(function (err) {
+      if (err) next(err);
+      req.session.token = token;
+    });
+
+    req.session.save(function (err) {
+      if (err) return next(err);
+
+      res.redirect('/game');
+    });
+  } catch (error) {
+    // TODO: Implement a catch all Error method.
+  }
 });
 
 app.get('/categories', async (req, res) => {
@@ -61,6 +84,7 @@ app.get('/categories', async (req, res) => {
       message: 'Categories fetched with success.',
     });
   } catch (error) {
+    // TODO: Implement a catch all Error method.
     res.send({
       status: 500,
       message: error.message || 'Categories fetching failed. Try again later.',
@@ -74,4 +98,10 @@ app.get('/rules', (req, res) => {
   });
 });
 
-app.listen(PORT);
+app.get('/game', hasToken, (req, res) => {
+  res.render('game', {
+    title: 'Trivia50 - Game',
+  });
+});
+
+app.listen(process.env.SERVER_PORT);

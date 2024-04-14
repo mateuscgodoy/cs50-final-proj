@@ -23,9 +23,7 @@ async function fetchTriviaCategories() {
   try {
     const response = await fetch('https://opentdb.com/api_category.php');
     if (!response.ok) {
-      throw new Error(
-        'Categories server encountered a problem. Try again later.'
-      );
+      throw new Error('Trivia server encountered a problem. Try again later.');
     }
     const { trivia_categories } = await response.json();
     return processCategories(trivia_categories);
@@ -34,4 +32,27 @@ async function fetchTriviaCategories() {
   }
 }
 
-module.exports = { fetchTriviaCategories };
+/**
+ * Fetches a usage token from Trivia API, used to avoid repeating questions.
+ * @returns {string} The token as received from the Trivia API.
+ * @throws {Error} Throws any error that it may encounter.
+ */
+async function fetchTriviaToken() {
+  try {
+    const response = await fetch(
+      'https://opentdb.com/api_token.php?command=request'
+    );
+    if (!response.ok) {
+      throw new Error('Trivia server encountered a problem. Try again later.');
+    }
+    const data = await response.json();
+    if (data.response_code !== 0) {
+      throw new Error(data.response_message);
+    }
+    return data.token;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchTriviaCategories, fetchTriviaToken };
