@@ -34,16 +34,16 @@ app.get('/categories', async (req, res) => {
       );
     }
     const { trivia_categories } = await response.json();
-    return {
+    res.send({
       status: 200,
       data: processCategories(trivia_categories),
       message: 'Categories fetched with success.',
-    };
+    });
   } catch (error) {
-    return {
+    res.send({
       status: 500,
       message: error.message || 'Categories fetching failed. Try again later.',
-    };
+    });
   }
 });
 

@@ -69,7 +69,7 @@ function configureCategories() {
   const frag = document.createDocumentFragment();
   const container = document.getElementById('categories');
 
-  container.addEventListener('click', onClickCategory);
+  // container.addEventListener('click', onClickCategory);
 
   categories.forEach((category) => {
     const checkContainer = configureCategoryUI(category);
@@ -111,21 +111,24 @@ function onClickCategory(event) {
 function configureCategoryUI(category) {
   const checkbox = document.createElement('input');
   const label = document.createElement('label');
-  const checkContainer = document.createElement('div');
+  const divContainer = document.createElement('div');
 
   checkbox.type = 'checkbox';
   checkbox.classList.add('btn-check');
   checkbox.id = `btn-check-${category.id}`;
   checkbox.autocomplete = 'off';
+  checkbox.name = category.id;
+  checkbox.value = category.id;
+
   label.textContent = category.name;
-  label.classList.add('btn', 'text-bright');
+  label.classList.add('btn');
   label.htmlFor = `btn-check-${category.id}`;
-  checkContainer.classList.add('my-2');
 
-  checkContainer.appendChild(checkbox);
-  checkContainer.appendChild(label);
+  divContainer.classList.add('my-2');
+  divContainer.appendChild(checkbox);
+  divContainer.appendChild(label);
 
-  return checkContainer;
+  return divContainer;
 }
 
 /**
