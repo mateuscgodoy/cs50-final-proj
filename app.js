@@ -6,8 +6,8 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const triviaController = require('./controllers/trivia');
-const resourcesController = require('./controllers/resources');
+const triviaRouter = require('./controllers/trivia');
+const resourcesRouter = require('./controllers/resources');
 
 const app = express();
 
@@ -24,7 +24,21 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(resourcesController);
-app.use(triviaController);
+app.use(resourcesRouter);
+app.use(triviaRouter);
+
+app.use((req, res) => {
+  res.status(404).render('404', {
+    title: '404 - Content Not Found',
+  });
+});
+
+app.use((error, req, res, next) => {
+  const status = error.status || 500;
+  res.status(status).render('error', {
+    title: `Error ${status}`,
+    message: error.message,
+  });
+});
 
 app.listen(process.env.SERVER_PORT);
