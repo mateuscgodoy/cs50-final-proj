@@ -19,6 +19,11 @@ function processCategories(categories) {
   });
 }
 
+/**
+ * Fetches the list of categories from the Trivia API.
+ * @returns {Object} The trivia categories as received from the API.
+ * @throws {Error} In case the operation fail or the API is down.
+ */
 async function fetchTriviaCategories() {
   try {
     const response = await fetch('https://opentdb.com/api_category.php');
@@ -53,6 +58,24 @@ async function fetchTriviaToken() {
   } catch (error) {
     throw error;
   }
+}
+
+/**
+ * Creates a new user object to control different aspects of the game.
+ * @param {string} token The token received from Trivia API.
+ * @returns {Object} An object containing all the elements that represent an user.
+ */
+function createUser(token) {
+  return {
+    token,
+    questionsAnswered: 0,
+    lifelines: {
+      '50:50': true,
+      skip: true,
+      audience: true,
+      expert: true,
+    },
+  };
 }
 
 module.exports = { fetchTriviaCategories, fetchTriviaToken };
