@@ -80,7 +80,9 @@ async function fetchTriviaQuestion(user) {
       if (code === 5) {
         await delayFunction(3000);
       } else if (code === 0) {
-        return results[0];
+        const question = results[0];
+        question.answered = false;
+        return question;
       } else {
         throw new Error(
           'Trivia API could not return a question. Please, try again later.'
