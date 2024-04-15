@@ -7,6 +7,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const { fetchTriviaCategories, fetchTriviaToken } = require('./utils/trivia');
+const hasToken = require('./middlewares/hasToken');
 
 const appData = {};
 const app = express();
@@ -23,11 +24,6 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-function hasToken(req, res, next) {
-  if (req.session.token) next();
-  else res.redirect('/');
-}
 
 app.get('/', (req, res) => {
   res.render('index', {
