@@ -3,6 +3,7 @@ const express = require('express');
 const {
   fetchTriviaCategories,
   fetchTriviaToken,
+  createUser,
 } = require('../utils/triviaAPI');
 const hasToken = require('../middlewares/hasToken');
 
@@ -22,28 +23,23 @@ router.post('/', async (req, res) => {
       const categories = await fetchTriviaCategories();
       appData.categories = categories.map((category) => category.id);
     }
-  } catch (error) {
-    // TODO: Implement a catch all Error method.
-    console.error(error);
-    return res.redirect('/');
-  }
-  const keys = Object.keys(req.body);
-  const allValidKeys = keys.every((key) =>
-    appData.categories.includes(parseInt(key))
-  );
-  if (!allValidKeys || keys.length < 10) {
-    // TODO: Return an error message to the frontend otherwise
-    console.error('Invalid keys provided');
-    return res.redirect('/');
-  }
-  appData.userCategories = keys;
 
-  try {
+    const keys = Object.keys(req.body);
+    const allValidKeys = keys.every((key) =>
+      appData.categories.includes(parseInt(key))
+    );
+    if (!allValidKeys || keys.length < 10) {
+      // TODO: Return an error message to the frontend otherwise
+      console.error('Invalid keys provided');
+      return res.redirect('/');
+    }
+
+    appData.userCategories = keys;
     const token = await fetchTriviaToken();
 
     req.session.regenerate(function (err) {
       if (err) next(err);
-      req.session.token = token;
+      req.session.user = createUser(token);
     });
 
     req.session.save(function (err) {
@@ -53,6 +49,8 @@ router.post('/', async (req, res) => {
     });
   } catch (error) {
     // TODO: Implement a catch all Error method.
+    console.error(error);
+    return res.redirect('/');
   }
 });
 

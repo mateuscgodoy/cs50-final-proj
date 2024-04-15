@@ -78,4 +78,4 @@ function createUser(token) {
   };
 }
 
-module.exports = { fetchTriviaCategories, fetchTriviaToken };
+module.exports = { fetchTriviaCategories, fetchTriviaToken, createUser };
