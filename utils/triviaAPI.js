@@ -158,9 +158,18 @@ function delayFunction(delay) {
   return new Promise((resolve) => setTimeout(resolve, delay));
 }
 
+function getFrontendQuestion(data) {
+  const { correct_answer, incorrect_answers, question } = data;
+  const size = incorrect_answers.length + 1;
+  const randomIndex = Math.floor(Math.random() * size);
+  const answers = incorrect_answers.toSpliced(randomIndex, 0, correct_answer);
+  return { question, answers };
+}
+
 module.exports = {
   fetchTriviaCategories,
   fetchTriviaToken,
   fetchTriviaQuestion,
   createUser,
+  getFrontendQuestion,
 };
