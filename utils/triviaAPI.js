@@ -81,7 +81,7 @@ async function fetchTriviaQuestion(user) {
         await delayFunction(3000);
       } else if (code === 0) {
         const question = results[0];
-        question.answered = false;
+        question.answered = '';
         return question;
       } else {
         throw new Error(

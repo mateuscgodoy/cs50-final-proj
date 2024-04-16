@@ -72,14 +72,21 @@ router.get('/game', hasToken, (req, res) => {
 router.post('/game', hasToken, hasQuestion, (req, res) => {
   const { body } = req;
   if (body.answer) {
-    if (body.answer === req.session.question.correct_answer) {
-      req.session.question.answered = true;
+    if (
+      body.answer.toLowerCase() ===
+      req.session.question.correct_answer.toLowerCase()
+    ) {
+      req.session.question.answered = body.answer;
       req.session.save(function (err) {
         if (err) next(err);
         else return res.redirect('/game');
       });
     } else {
-      return res.redirect('/end');
+      req.session.question.answered = 'X';
+      req.session.save(function (err) {
+        if (err) next(err);
+        else return res.redirect('/game');
+      });
     }
   } else if (body.lifeline) {
     // TODO: Process lifeline
