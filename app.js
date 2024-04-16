@@ -29,7 +29,7 @@ app.use(triviaRouter);
 
 app.use((req, res) => {
   res.status(404).render('404', {
-    title: '404 - Content Not Found',
+    title: 'Trivia404 - Content Not Found',
   });
 });
 

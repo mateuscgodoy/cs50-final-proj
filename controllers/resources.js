@@ -26,8 +26,6 @@ router.get('/categories', async (req, res) => {
 });
 
 router.get('/question', hasToken, async (req, res) => {
-  const questionNotAnswered =
-    req.session.question && !req.session.question.answered;
   const question =
     req.session.question || (await fetchTriviaQuestion(req.session.user));
   const user = req.session.user;
