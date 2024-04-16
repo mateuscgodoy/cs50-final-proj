@@ -161,11 +161,11 @@ function delayFunction(delay) {
 }
 
 function getFrontendQuestion(data) {
-  const { correct_answer, incorrect_answers, question } = data;
+  const { correct_answer, incorrect_answers, question, answered } = data;
   const size = incorrect_answers.length + 1;
   const randomIndex = Math.floor(Math.random() * size);
   const answers = incorrect_answers.toSpliced(randomIndex, 0, correct_answer);
-  return { question, answers };
+  return { question, answers, answered };
 }
 
 module.exports = {
