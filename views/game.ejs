@@ -5,7 +5,7 @@
   <body>
     <main>
       <form action="/game" method="post">
-        <div>
+        <div id="lifeline">
           <div>
             Lifelines
           </div>
@@ -45,7 +45,8 @@
             <label class="btn btn-primary" for="d">❌</label>
           </div>
         </div>
-        <button type="submit">Confirm</button>
+        <button id="confirm" type="submit">Confirm</button>
       </form>
+      <p id="message" class="alert"></p>
     </main>
     <%- include('includes/footer.ejs') %>

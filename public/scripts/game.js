@@ -1,18 +1,56 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const answersContainer = document.getElementById('answers');
+  const answers = Array.from(answersContainer.querySelectorAll('input'));
+  const labels = Array.from(answersContainer.querySelectorAll('label'));
   const question = await getQuestion();
-  console.log(question);
+
   if (!question.answered) {
     setQuestionUI(question);
   } else if (question.answered === 'X') {
-    // Process wrong
-    // Disable all buttons
-    // Print message in red
+    printMessage(
+      "Unfortunately, that's not the right answer 😟. Go again!",
+      'alert-danger'
+    );
+    disableAllButtons();
   } else {
-    // Process correct
+    printMessage('Your answer is correct! Keep going! 👏', 'alert-success');
     // Set flashing green effect on the write answer
+
     // Print congratulations message
     // After the time period just refresh the page
     // the backend should be on the correct state to delivery a new question
+  }
+
+  /**
+   * Prints a message to the user, also style it accordingly
+   * @param {string} message The message to print
+   * @param {string} style Optional CSS/Bootstrap class
+   */
+  function printMessage(message, style = null) {
+    const messageBox = document.querySelector('#message');
+    messageBox.textContent = message;
+    if (style) {
+      messageBox.classList.add(style);
+    }
+  }
+
+  async function renderSuccessEffect(rightAnswer) {
+    const button = answers.find((answer) => answer.innerHTML === rightAnswer);
+    // TODO
+  }
+
+  /**
+   * Helper function to disable all buttons once the player answers a question wrong
+   */
+  function disableAllButtons() {
+    const lifelines = Array.from(
+      document.querySelector('#lifeline').querySelectorAll('input')
+    );
+    const submitBtn = document.querySelector('#confirm');
+
+    lifelines.forEach((input) => (input.disabled = true));
+    answers.forEach((input) => (input.disabled = true));
+    submitBtn.disabled = true;
   }
 
   /**
@@ -33,11 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const questionText = document.getElementById('question');
     questionText.innerHTML = question;
 
-    const answersContainer = document.getElementById('answers');
-    const inputs = Array.from(answersContainer.querySelectorAll('input'));
-    const labels = Array.from(answersContainer.querySelectorAll('label'));
     answers.forEach((answer, i) => {
-      inputs[i].value = answer;
+      answers[i].value = answer;
       labels[i].innerHTML = answer;
     });
   }
