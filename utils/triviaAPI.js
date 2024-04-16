@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 /**
  * Normalize the categories names for better printing.
  * @param {{id: number, name: string}[]} categories The trivia categories as received from the API
@@ -24,16 +27,33 @@ function processCategories(categories) {
  * @returns {Object} The trivia categories as received from the API.
  * @throws {Error} In case the operation fail or the API is down.
  */
-async function fetchTriviaCategories() {
+async function getTriviaCategories() {
+  const filePath = path.join(__dirname, '../config/categories.json');
+
   try {
-    const response = await fetch('https://opentdb.com/api_category.php');
-    if (!response.ok) {
-      throw new Error('Trivia server encountered a problem. Try again later.');
-    }
-    const { trivia_categories } = await response.json();
-    return processCategories(trivia_categories);
+    // Try to read categories from file
+    const data = await fs.promises.readFile(filePath, 'utf8');
+    return JSON.parse(data);
   } catch (error) {
-    throw error;
+    // If reading from file fails, fetch from URL and write to file
+    console.error(
+      'Failed to read categories from file. Fetching from URL...',
+      error
+    );
+    try {
+      const response = await fetch('https://opentdb.com/api_category.php');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories from URL');
+      }
+      const { trivia_categories } = await response.json();
+      const categories = processCategories(trivia_categories);
+      // Write categories to file
+      await fs.promises.writeFile(filePath, JSON.stringify(categories), 'utf8');
+      return categories;
+    } catch (fetchError) {
+      console.error('Failed to fetch categories from URL:', fetchError);
+      throw fetchError;
+    }
   }
 }
 
@@ -169,7 +189,7 @@ function getFrontendQuestion(data) {
 }
 
 module.exports = {
-  fetchTriviaCategories,
+  getTriviaCategories,
   fetchTriviaToken,
   fetchTriviaQuestion,
   createUser,

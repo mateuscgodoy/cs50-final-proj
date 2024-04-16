@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {
-  fetchTriviaCategories,
+  getTriviaCategories,
   fetchTriviaQuestion,
   getFrontendQuestion,
 } = require('../utils/triviaAPI');
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/categories', async (req, res) => {
   try {
-    const categories = await fetchTriviaCategories();
+    const categories = await getTriviaCategories();
     res.send({
       status: 200,
       data: categories,

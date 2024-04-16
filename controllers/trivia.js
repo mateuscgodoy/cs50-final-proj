@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {
-  fetchTriviaCategories,
+  getTriviaCategories,
   fetchTriviaToken,
   createUser,
 } = require('../utils/triviaAPI');
@@ -19,11 +19,11 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     console.log(appData);
     if (!appData.categories) {
-      const categories = await fetchTriviaCategories();
+      const categories = await getTriviaCategories();
       appData.categories = categories.map((category) => category.id);
     }
 
@@ -52,8 +52,7 @@ router.post('/', async (req, res) => {
     });
   } catch (error) {
     // TODO: Implement a catch all Error method.
-    console.error(error);
-    return res.redirect('/');
+    next(error);
   }
 });
 
