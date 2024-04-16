@@ -18,7 +18,6 @@ router.get('/categories', async (req, res) => {
       message: 'Categories fetched with success.',
     });
   } catch (error) {
-    // TODO: Implement a catch all Error method.
     res.send({
       status: 500,
       message: error.message || 'Categories fetching failed. Try again later.',

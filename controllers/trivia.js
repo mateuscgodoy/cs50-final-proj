@@ -10,9 +10,6 @@ const hasQuestion = require('../middlewares/hasQuestion');
 
 const router = express.Router();
 
-//! Horrible practice ☹️
-const appData = {};
-
 router.get('/', (req, res) => {
   res.render('index', {
     title: 'Trivia50 - Home',
@@ -21,23 +18,18 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    console.log(appData);
-    if (!appData.categories) {
-      const categories = await getTriviaCategories();
-      appData.categories = categories.map((category) => category.id);
-    }
+    const categories = await getTriviaCategories();
+    const categoriesIds = categories.map((category) => category.id);
 
     const keys = Object.keys(req.body);
     const allValidKeys = keys.every((key) =>
-      appData.categories.includes(parseInt(key))
+      categoriesIds.includes(parseInt(key))
     );
     if (!allValidKeys || keys.length < 10) {
       // TODO: Return an error message to the frontend otherwise
-      console.error('Invalid keys provided');
       return res.redirect('/');
     }
 
-    appData.userCategories = keys;
     const token = await fetchTriviaToken();
 
     req.session.regenerate(function (err) {

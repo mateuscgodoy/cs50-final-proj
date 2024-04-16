@@ -31,11 +31,9 @@ async function getTriviaCategories() {
   const filePath = path.join(__dirname, '../config/categories.json');
 
   try {
-    // Try to read categories from file
     const data = await fs.promises.readFile(filePath, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    // If reading from file fails, fetch from URL and write to file
     console.error(
       'Failed to read categories from file. Fetching from URL...',
       error
@@ -47,7 +45,6 @@ async function getTriviaCategories() {
       }
       const { trivia_categories } = await response.json();
       const categories = processCategories(trivia_categories);
-      // Write categories to file
       await fs.promises.writeFile(filePath, JSON.stringify(categories), 'utf8');
       return categories;
     } catch (fetchError) {
