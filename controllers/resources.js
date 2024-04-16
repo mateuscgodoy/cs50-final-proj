@@ -26,24 +26,30 @@ router.get('/categories', async (req, res) => {
 });
 
 router.get('/question', hasToken, async (req, res) => {
+  const user = req.session.user;
   const question =
     req.session.question || (await fetchTriviaQuestion(req.session.user));
-  const user = req.session.user;
-
-  req.session.regenerate(function (err) {
-    if (err) next(err);
-    req.session.user = user;
-    if (!req.session.question || !req.session.question.answered) {
-      req.session.question = question;
-    }
-  });
-
   const formattedQuestion = getFrontendQuestion(question);
+  console.log(question.correct_answer);
+  if (req.session.question && req.session.question.answered === 'X') {
+    req.session.destroy(function (err) {
+      if (err) return next(err);
+      res.send(formattedQuestion);
+    });
+  } else {
+    req.session.regenerate(function (err) {
+      if (err) next(err);
+      req.session.user = user;
+      if (!req.session.question || !req.session.question.answered) {
+        req.session.question = question;
+      }
+    });
 
-  req.session.save(function (err) {
-    if (err) return next(err);
-    res.send(formattedQuestion);
-  });
+    req.session.save(function (err) {
+      if (err) return next(err);
+      res.send(formattedQuestion);
+    });
+  }
 });
 
 module.exports = router;

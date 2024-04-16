@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const answersContainer = document.getElementById('answers');
-  const answers = Array.from(answersContainer.querySelectorAll('input'));
+  const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
   const labels = Array.from(answersContainer.querySelectorAll('label'));
   const question = await getQuestion();
 
@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function renderSuccessEffect(rightAnswer) {
-    const button = answers.find((answer) => answer.innerHTML === rightAnswer);
+    const button = answersInputs.find(
+      (answer) => answer.innerHTML === rightAnswer
+    );
     // TODO
   }
 
@@ -43,13 +45,13 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Helper function to disable all buttons once the player answers a question wrong
    */
   function disableAllButtons() {
-    const lifelines = Array.from(
+    const lifelinesInputs = Array.from(
       document.querySelector('#lifeline').querySelectorAll('input')
     );
     const submitBtn = document.querySelector('#confirm');
 
-    lifelines.forEach((input) => (input.disabled = true));
-    answers.forEach((input) => (input.disabled = true));
+    lifelinesInputs.forEach((input) => (input.disabled = true));
+    answersInputs.forEach((input) => (input.disabled = true));
     submitBtn.disabled = true;
   }
 
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     questionText.innerHTML = question;
 
     answers.forEach((answer, i) => {
-      answers[i].value = answer;
+      answersInputs[i].value = answer;
       labels[i].innerHTML = answer;
     });
   }
