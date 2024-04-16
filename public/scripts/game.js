@@ -2,23 +2,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   const answersContainer = document.getElementById('answers');
   const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
   const labels = Array.from(answersContainer.querySelectorAll('label'));
+  const questionText = document.getElementById('question');
+
   const question = await getQuestion();
 
-  if (!question.answered) {
-    setQuestionUI(question);
-  } else if (question.answered === 'X') {
+  if (question.answered === 'X') {
+    questionText.textContent = '';
     printMessage(
       "Unfortunately, that's not the right answer 😟. Go again!",
       'alert-danger'
     );
     disableAllButtons();
-  } else {
+  } else if (question.answered) {
     printMessage('Your answer is correct! Keep going! 👏', 'alert-success');
-    // Set flashing green effect on the write answer
-
-    // Print congratulations message
-    // After the time period just refresh the page
-    // the backend should be on the correct state to delivery a new question
+    disableAllButtons();
+    await delayFunction(2000);
+    location.reload();
+  } else {
+    setQuestionUI(question);
   }
 
   /**
@@ -70,12 +71,20 @@ document.addEventListener('DOMContentLoaded', async () => {
    * @param {{question:string, answers: string[]}} Data The question text and answers.
    */
   function setQuestionUI({ question, answers }) {
-    const questionText = document.getElementById('question');
     questionText.innerHTML = question;
 
     answers.forEach((answer, i) => {
       answersInputs[i].value = answer;
       labels[i].innerHTML = answer;
     });
+  }
+
+  /**
+   * A utility function to pause the execution of a function, to avoid API time constraint.
+   * @param {number} delay The delay amount in ms.
+   * @returns A promise that will resolve once the delay elapsed.
+   */
+  function delayFunction(delay) {
+    return new Promise((resolve) => setTimeout(resolve, delay));
   }
 });

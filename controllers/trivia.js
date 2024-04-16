@@ -63,7 +63,6 @@ router.get('/game', hasToken, (req, res) => {
 router.post('/game', hasToken, hasQuestion, (req, res) => {
   const { body } = req;
   if (body.answer) {
-    console.log(body.answer, req.session.question.correct_answer);
     if (
       body.answer.toLowerCase() ===
       req.session.question.correct_answer.toLowerCase()
