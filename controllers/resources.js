@@ -37,10 +37,9 @@ router.get('/question', hasToken, async (req, res, next) => {
     const question = req.session.question || (await fetchTriviaQuestion(user));
     question.display = question.display || getFrontendQuestion(question);
     req.session.question = question;
-
     req.session.save(function (err) {
       if (err) next(err);
-      else return res.send(question.display);
+      else res.send(question.display);
     });
   } catch (error) {
     next(error);

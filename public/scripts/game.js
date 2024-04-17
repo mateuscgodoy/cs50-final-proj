@@ -51,7 +51,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      const answerResultEvent = new CustomEvent('answerResult', {
+        detail: { isCorrect: data.isCorrect },
+      });
+      document.dispatchEvent(answerResultEvent);
     } catch (error) {
       console.error('Error submitting answer:', error);
     }
@@ -117,5 +120,18 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   function delayFunction(delay) {
     return new Promise((resolve) => setTimeout(resolve, delay));
+  }
+});
+
+document.addEventListener('answerResult', (event) => {
+  const isCorrect = event.detail.isCorrect;
+  const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+  if (selectedAnswer) {
+    selectedAnswer.parentElement.style.backgroundColor = isCorrect
+      ? 'lightgreen'
+      : 'lightcoral';
+    setTimeout(() => {
+      selectedAnswer.parentElement.style.backgroundColor = ''; // Reset background color after 3 seconds
+    }, 3000);
   }
 });
