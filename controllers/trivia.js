@@ -4,7 +4,6 @@ const {
   getTriviaCategories,
   fetchTriviaToken,
   createUser,
-  processLifeline,
 } = require('../utils/triviaAPI');
 const hasToken = require('../middlewares/hasToken');
 const hasQuestion = require('../middlewares/hasQuestion');
@@ -63,7 +62,7 @@ router.get('/game', hasToken, (req, res) => {
 
 router.post('/game', hasToken, hasQuestion, (req, res) => {
   const { body } = req;
-  const { question, user } = req.session;
+  const { question } = req.session;
 
   if (body.answer) {
     const isAnswerRight =
@@ -72,17 +71,6 @@ router.post('/game', hasToken, hasQuestion, (req, res) => {
     req.session.save(function (err) {
       if (err) next(err);
       else return res.redirect('/game');
-    });
-  } else if (body.lifeline) {
-    const lifeline = body.lifeline.toLowerCase();
-
-    if (user.lifelines[lifeline]) {
-      user.lifelines[lifeline] = false;
-      req.session.question = processLifeline(lifeline, req.session.question);
-    }
-    req.session.save(function (err) {
-      if (err) next(err);
-      return res.redirect('/game');
     });
   } else {
     next({

@@ -160,12 +160,6 @@ function createUser(token, selectedCategories) {
     token,
     selectedCategories,
     questionsAnswered: 0,
-    lifelines: {
-      '50:50': true,
-      skip: true,
-      audience: true,
-      expert: true,
-    },
   };
 }
 
@@ -192,42 +186,10 @@ function getFrontendQuestion(questionData) {
   return { question, answers, answered };
 }
 
-/**
- * Transforms the question data version based on the selected lifeline.
- * @param {string} lifeline The life line selected
- * @param {Object} questionData The server side version of the question object
- */
-function processLifeline(lifeline, questionData) {
-  switch (lifeline) {
-    case '50:50':
-      const randomIndex = Math.floor(
-        Math.random() * questionData.incorrect_answers.length
-      );
-      questionData.incorrect_answers = [
-        questionData.incorrect_answers[randomIndex],
-      ];
-      break;
-    case 'audience':
-      // TODO
-
-      break;
-    case 'expert':
-      questionData.incorrect_answers.length = 0;
-      break;
-    case 'skip':
-      return null;
-    default:
-      throw new Error('Invalid lifeline provided.');
-  }
-
-  return questionData;
-}
-
 module.exports = {
   getTriviaCategories,
   fetchTriviaToken,
   fetchTriviaQuestion,
   createUser,
   getFrontendQuestion,
-  processLifeline,
 };

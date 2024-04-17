@@ -29,7 +29,11 @@ router.get('/question', hasToken, async (req, res) => {
   const user = req.session.user;
   const question =
     req.session.question || (await fetchTriviaQuestion(req.session.user));
-  const formattedQuestion = getFrontendQuestion(question);
+  const notDisplayedYet =
+    !req.session.question || !req.session.question.displayQuestion;
+  const displayQuestion = notDisplayedYet
+    ? getFrontendQuestion(question)
+    : req.session.question.displayQuestion;
 
   console.log(question.correct_answer);
 
@@ -37,7 +41,7 @@ router.get('/question', hasToken, async (req, res) => {
     if (req.session.question.answered === 'X') {
       req.session.destroy(function (err) {
         if (err) return next(err);
-        res.send(formattedQuestion);
+        res.send(displayQuestion);
       });
     } else {
       req.session.regenerate(function (err) {
@@ -48,7 +52,7 @@ router.get('/question', hasToken, async (req, res) => {
 
       req.session.save(function (err) {
         if (err) return next(err);
-        res.send(formattedQuestion);
+        res.send(displayQuestion);
       });
     }
   } else {
@@ -56,11 +60,12 @@ router.get('/question', hasToken, async (req, res) => {
       if (err) next(err);
       req.session.user = user;
       req.session.question = question;
+      req.session.question.displayQuestion = displayQuestion;
     });
 
     req.session.save(function (err) {
       if (err) return next(err);
-      res.send(formattedQuestion);
+      res.send(displayQuestion);
     });
   }
 });

@@ -46,12 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Helper function to disable all buttons once the player answers a question wrong
    */
   function disableAllButtons() {
-    const lifelinesInputs = Array.from(
-      document.querySelector('#lifeline').querySelectorAll('input')
-    );
     const submitBtn = document.querySelector('#confirm');
 
-    lifelinesInputs.forEach((input) => (input.disabled = true));
     answersInputs.forEach((input) => (input.disabled = true));
     submitBtn.disabled = true;
   }

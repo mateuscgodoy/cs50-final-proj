@@ -6,7 +6,7 @@ The goal from this project is to reproduce the famous "How wants to be a million
 
 ## Game Mechanics
 
-> **TLDR**: There will be 15 multiple choice questions on increasing difficulty, answer all of them correctly to win the highest amount of points. Answer a question wrong and the game is over. Lifelines are 1 time boosting actions to help answering the current question.
+> **TLDR**: There will be 15 multiple choice questions on increasing difficulty, answer all of them correctly to win the highest amount of points. Answer a question wrong and the game is over.
 
 The game starts with a "Setup" phase, where players will decide the following attributes:
 * **Username**
@@ -28,38 +28,23 @@ For example, if a player fails on question 11, since they completed the entire t
 
 Following there's a table showing the rewarded amount of CSD, difficulty and tier for each question of the game:
 
-| Question | Prize (CSD) | Difficulty | Tier |
-| -------- | ----------- | ---------- | ---- |
-| 1        | 500         | Easy       | 1    |
-| 2        | 1.000       | Easy       | 1    |
-| 3        | 2.000       | Easy       | 1    |
-| 4        | 3.000       | Easy       | 1    |
-| 5        | 5.000       | Easy       | 1    |
-| 6        | 7.500       | Medium     | 2    |
-| 7        | 10.000      | Medium     | 2    |
-| 8        | 12.500      | Medium     | 2    |
-| 9        | 15.000      | Medium     | 2    |
-| 10       | 25.000      | Medium     | 2    |
-| 11       | 50.000      | Hard       | 3    |
-| 12       | 100.000     | Hard       | 3    |
-| 13       | 250.000     | Hard       | 3    |
-| 14       | 500.000     | Hard       | 3    |
-| 15       | 1.000.000   | Hard       | 3    |
+| Question | Points    | Difficulty | Tier |
+| -------- | --------- | ---------- | ---- |
+| 1        | 500       | Easy       | 1    |
+| 2        | 1.000     | Easy       | 1    |
+| 3        | 2.000     | Easy       | 1    |
+| 4        | 3.000     | Easy       | 1    |
+| 5        | 5.000     | Easy       | 1    |
+| 6        | 7.500     | Medium     | 2    |
+| 7        | 10.000    | Medium     | 2    |
+| 8        | 12.500    | Medium     | 2    |
+| 9        | 15.000    | Medium     | 2    |
+| 10       | 25.000    | Medium     | 2    |
+| 11       | 50.000    | Hard       | 3    |
+| 12       | 100.000   | Hard       | 3    |
+| 13       | 250.000   | Hard       | 3    |
+| 14       | 500.000   | Hard       | 3    |
+| 15       | 1.000.000 | Hard       | 3    |
 
-> Note that the prizes are in **CSD**, a fantasy currency called _"Computer Science Dollars"_ 😉.
-
-### Lifelines
-
-Lifelines are defined as a 1 time action, aimed at aiding players by reducing the current question difficulty, or pointing them to the possible right answer.
-
-There's a total of 4 Lifelines described described next.
-#### 50:50
-Eliminates 2 from the 4 possible answers that a question has.
-#### Ask the Audience
-Simulates an audience voting system. Could potentially lead to wrong answers or close differences between opinions.
-#### Ask the Expert
-Asks an expert on the subject to help. Has the highest chance of being the right answer.
-#### Skip Question
-Skip that question entirely and receive a new one.
 
 ---
