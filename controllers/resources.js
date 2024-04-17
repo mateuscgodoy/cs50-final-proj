@@ -6,6 +6,7 @@ const {
   getFrontendQuestion,
 } = require('../utils/triviaAPI');
 const hasToken = require('../middlewares/hasToken');
+const hasQuestion = require('../middlewares/hasQuestion');
 
 const router = express.Router();
 
@@ -25,49 +26,41 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-router.get('/question', hasToken, async (req, res) => {
-  const user = req.session.user;
-  const question =
-    req.session.question || (await fetchTriviaQuestion(req.session.user));
-  const notDisplayedYet =
-    !req.session.question || !req.session.question.displayQuestion;
-  const displayQuestion = notDisplayedYet
-    ? getFrontendQuestion(question)
-    : req.session.question.displayQuestion;
-
-  console.log(question.correct_answer);
-
-  if (req.session.question) {
-    if (req.session.question.answered === 'X') {
-      req.session.destroy(function (err) {
-        if (err) return next(err);
-        res.send(displayQuestion);
-      });
-    } else {
-      req.session.regenerate(function (err) {
-        if (err) next(err);
-        req.session.user = user;
-        delete req.session.question;
-      });
-
-      req.session.save(function (err) {
-        if (err) return next(err);
-        res.send(displayQuestion);
-      });
-    }
-  } else {
+router.get('/question', hasToken, async (req, res, next) => {
+  try {
+    const { user } = req.session;
     req.session.regenerate(function (err) {
       if (err) next(err);
-      req.session.user = user;
-      req.session.question = question;
-      req.session.question.displayQuestion = displayQuestion;
+      else req.session.user = user;
     });
 
+    const question = req.session.question || (await fetchTriviaQuestion(user));
+    question.display = question.display || getFrontendQuestion(question);
+    req.session.question = question;
+
     req.session.save(function (err) {
-      if (err) return next(err);
-      res.send(displayQuestion);
+      if (err) next(err);
+      else return res.send(question.display);
     });
+  } catch (error) {
+    next(error);
   }
+});
+
+router.post('/answer', hasToken, hasQuestion, (req, res, next) => {
+  const { user } = req.session;
+  const { answer } = req.body;
+  const isCorrect = req.session.question.correct_answer === answer;
+
+  req.session.regenerate(function (err) {
+    if (err) next(err);
+    else req.session.user = user;
+  });
+
+  req.session.save(function (err) {
+    if (err) next(err);
+    else res.status(200).send({ isCorrect });
+  });
 });
 
 module.exports = router;

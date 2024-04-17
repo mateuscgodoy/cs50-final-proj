@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const form = document.querySelector('form');
   const answersContainer = document.getElementById('answers');
   const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
   const labels = Array.from(answersContainer.querySelectorAll('label'));
   const questionText = document.getElementById('question');
+
+  form.addEventListener('submit', onSubmitAnswer);
 
   const question = await getQuestion();
 
@@ -20,6 +23,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     location.reload();
   } else {
     setQuestionUI(question);
+  }
+
+  /**
+   *
+   * @param {EventTarget} e
+   */
+  async function onSubmitAnswer(event) {
+    event.preventDefault();
+    const selectedAnswer = document.querySelector(
+      'input[name="answer"]:checked'
+    );
+
+    if (!selectedAnswer) return;
+
+    try {
+      const response = await fetch('/answer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answer: selectedAnswer.value }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit answer');
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+    }
   }
 
   /**
