@@ -4,6 +4,7 @@ const {
   getTriviaCategories,
   fetchTriviaToken,
   createUser,
+  processLifeline,
 } = require('../utils/triviaAPI');
 const hasToken = require('../middlewares/hasToken');
 const hasQuestion = require('../middlewares/hasQuestion');
@@ -62,27 +63,27 @@ router.get('/game', hasToken, (req, res) => {
 
 router.post('/game', hasToken, hasQuestion, (req, res) => {
   const { body } = req;
+  const { question, user } = req.session;
+
   if (body.answer) {
-    if (
-      body.answer.toLowerCase() ===
-      req.session.question.correct_answer.toLowerCase()
-    ) {
-      req.session.question.answered = body.answer;
-      req.session.save(function (err) {
-        if (err) next(err);
-        else return res.redirect('/game');
-      });
-    } else {
-      req.session.question.answered = 'X';
-      req.session.save(function (err) {
-        if (err) next(err);
-        else return res.redirect('/game');
-      });
-    }
+    const isAnswerRight =
+      body.answer.toLowerCase() === question.correct_answer.toLowerCase();
+    question.answered = isAnswerRight ? body.answer : 'X';
+    req.session.save(function (err) {
+      if (err) next(err);
+      else return res.redirect('/game');
+    });
   } else if (body.lifeline) {
-    // TODO: Process lifeline
-    console.log(body.lifeline);
-    return res.redirect('/game');
+    const lifeline = body.lifeline.toLowerCase();
+
+    if (user.lifelines[lifeline]) {
+      user.lifelines[lifeline] = false;
+      req.session.question = processLifeline(lifeline, req.session.question);
+    }
+    req.session.save(function (err) {
+      if (err) next(err);
+      return res.redirect('/game');
+    });
   } else {
     next({
       status: 400,

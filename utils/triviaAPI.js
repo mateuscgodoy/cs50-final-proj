@@ -152,6 +152,7 @@ function getDifficulty(questionsAnswered) {
 /**
  * Creates a new user object to control different aspects of the game.
  * @param {string} token The token received from Trivia API.
+ * @param {string[]} selectedCategories The user selected categories
  * @returns {Object} An object containing all the elements that represent an user.
  */
 function createUser(token, selectedCategories) {
@@ -177,12 +178,49 @@ function delayFunction(delay) {
   return new Promise((resolve) => setTimeout(resolve, delay));
 }
 
-function getFrontendQuestion(data) {
-  const { correct_answer, incorrect_answers, question, answered } = data;
+/**
+ * Transforms the complete question data version to be presented on the frontend.
+ * @param {Object} questionData The question object as received from the API
+ * @returns {question: string, answers: string[], answered: string}
+ */
+function getFrontendQuestion(questionData) {
+  const { correct_answer, incorrect_answers, question, answered } =
+    questionData;
   const size = incorrect_answers.length + 1;
   const randomIndex = Math.floor(Math.random() * size);
   const answers = incorrect_answers.toSpliced(randomIndex, 0, correct_answer);
   return { question, answers, answered };
+}
+
+/**
+ * Transforms the question data version based on the selected lifeline.
+ * @param {string} lifeline The life line selected
+ * @param {Object} questionData The server side version of the question object
+ */
+function processLifeline(lifeline, questionData) {
+  switch (lifeline) {
+    case '50:50':
+      const randomIndex = Math.floor(
+        Math.random() * questionData.incorrect_answers.length
+      );
+      questionData.incorrect_answers = [
+        questionData.incorrect_answers[randomIndex],
+      ];
+      break;
+    case 'audience':
+      // TODO
+
+      break;
+    case 'expert':
+      questionData.incorrect_answers.length = 0;
+      break;
+    case 'skip':
+      return null;
+    default:
+      throw new Error('Invalid lifeline provided.');
+  }
+
+  return questionData;
 }
 
 module.exports = {
@@ -191,4 +229,5 @@ module.exports = {
   fetchTriviaQuestion,
   createUser,
   getFrontendQuestion,
+  processLifeline,
 };
