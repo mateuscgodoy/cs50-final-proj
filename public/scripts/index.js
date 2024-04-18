@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Renders the form with all fetched trivia categories and a submit button.
    */
   function renderCategoriesForm() {
+    const categoriesDiv = document.createElement('div');
     const categories = JSON.parse(localStorage.getItem(CATEGORIES));
     if (!categories) return;
 
@@ -43,8 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     submitBtn.textContent = 'Start';
     submitBtn.type = 'submit';
+    submitBtn.classList.add('btn', 'btn-primary');
 
-    form.appendChild(frag);
+    categoriesDiv.classList.add('categories');
+
+    categoriesDiv.appendChild(frag);
+    form.appendChild(categoriesDiv);
     form.appendChild(submitBtn);
   }
 
@@ -66,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkbox.value = category.id;
 
     label.textContent = category.name;
-    label.classList.add('btn');
+    label.classList.add('btn', 'btn-outline-secondary');
     label.htmlFor = `btn-check-${category.id}`;
 
     divContainer.classList.add('my-2');

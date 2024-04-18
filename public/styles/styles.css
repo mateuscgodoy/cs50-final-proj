@@ -1,6 +1,86 @@
+footer {
+  position: absolute;
+  height: 50px;
+  bottom: 0;
+  width: 100%;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+  background-color: goldenrod;
+  display: inline-block;
+  border-radius: 3px;
+  padding: 2px 9px;
+}
+
+.link:hover {
+  scale: 1.05;
+}
+
+.main {
+  padding-bottom: 70px;
+}
+
+.hero>p {
+  font-size: larger;
+  margin-bottom: 0;
+  text-align: left;
+  margin: 0 auto;
+  padding: 7.5px 15px;
+}
+
 .body {
   background: #E0EAFC;
   background: -webkit-linear-gradient(to bottom, #CFDEF3, #E0EAFC);
   background: linear-gradient(to bottom, #CFDEF3, #E0EAFC);
+  min-height: 100vh;
+  text-align: center;
+  position: relative;
+  color: gray;
+}
 
+.hero {
+  padding-top: 20vh;
+  margin-bottom: 15px;
+}
+
+.title {
+  font-size: 5rem;
+  color: goldenrod;
+  text-shadow: crimson 2px 2px 5px;
+}
+
+.sub-title {
+  font-size: 1.5rem;
+  width: fit-content;
+  margin: 0 0 0 55%;
+  margin-bottom: 20vh;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 5px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+
+@media (min-width: 1000px) {
+
+  .hero>p,
+  .categories {
+    width: 50%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 999px) {
+
+  .hero>p,
+  .categories {
+    width: 80%;
+    padding: 0;
+  }
 }
