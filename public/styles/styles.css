@@ -73,6 +73,12 @@ footer {
   .hero>p,
   .categories {
     width: 50%;
+
+  }
+
+  .lg-width {
+    width: 50%;
+    margin: 0 auto;
   }
 }
 
@@ -82,5 +88,10 @@ footer {
   .categories {
     width: 80%;
     padding: 0;
+  }
+
+  .lg-width {
+    width: 50%;
+    margin: 0 auto;
   }
 }
