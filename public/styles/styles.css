@@ -67,6 +67,45 @@ footer {
   margin: 0 auto;
 }
 
+.main-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+#question {
+  min-height: 125px;
+  padding: 10px;
+  background-color: darkslategray;
+  color: greenyellow;
+  border-radius: 1rem;
+}
+
+#answers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  justify-content: center;
+  align-content: center;
+}
+
+.answer-div>label {
+  width: 100%;
+}
+
+#confirm {
+  width: 50%;
+  margin: 0 auto;
+}
 
 @media (min-width: 1000px) {
 

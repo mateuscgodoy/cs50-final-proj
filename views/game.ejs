@@ -2,29 +2,29 @@
   <script src="/scripts/game.js" defer></script>
   </head>
 
-  <body>
-    <main>
-      <form action="/answer" method="post">
+  <body class="body d-flex flex-column justify-content-center">
+    <main class="main-game">
+      <form class="question-container" action="/answer" method="post">
         <div id="question">Loading...</div>
         <div id="answers">
-          <div>
+          <div class="answer-div">
             <input type="radio" class="btn-check" name="answer" id="a" autocomplete="off">
-            <label class="btn btn-primary" for="a"></label>
+            <label class="btn btn-outline-secondary" for="a"></label>
           </div>
-          <div>
+          <div class="answer-div">
             <input type="radio" class="btn-check" name="answer" id="b" autocomplete="off">
-            <label class="btn btn-primary" for="b"></label>
+            <label class="btn btn-outline-secondary" for="b"></label>
           </div>
-          <div>
+          <div class="answer-div">
             <input type="radio" class="btn-check" name="answer" id="c" autocomplete="off">
-            <label class="btn btn-primary" for="c"></label>
+            <label class="btn btn-outline-secondary" for="c"></label>
           </div>
-          <div>
+          <div class="answer-div">
             <input type="radio" class="btn-check" name="answer" id="d" autocomplete="off">
-            <label class="btn btn-primary" for="d"></label>
+            <label class="btn btn-outline-secondary" for="d"></label>
           </div>
         </div>
-        <button id="confirm" type="submit">Confirm</button>
+        <button class="btn btn-warning" id="confirm" type="submit">Confirm</button>
       </form>
       <p id="message" class="alert"></p>
     </main>
