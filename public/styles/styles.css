@@ -69,9 +69,9 @@ footer {
 
 .main-game {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
 }
 
 .question-container {
@@ -96,6 +96,10 @@ footer {
   gap: 0.5rem;
   justify-content: center;
   align-content: center;
+}
+
+.answer-div {
+  border-radius: 10px;
 }
 
 .answer-div>label {

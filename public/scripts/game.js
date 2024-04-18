@@ -1,33 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const form = document.querySelector('form');
-  const answersContainer = document.getElementById('answers');
-  const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
-  const labels = Array.from(answersContainer.querySelectorAll('label'));
-  const questionText = document.getElementById('question');
 
   form.addEventListener('submit', onSubmitAnswer);
 
-  const question = await getQuestion();
-
-  if (question.answered === 'X') {
-    questionText.textContent = '';
-    printMessage(
-      "Unfortunately, that's not the right answer 😟. Go again!",
-      'alert-danger'
-    );
-    disableAllButtons();
-  } else if (question.answered) {
-    printMessage('Your answer is correct! Keep going! 👏', 'alert-success');
-    disableAllButtons();
-    await delayFunction(2000);
-    location.reload();
-  } else {
-    setQuestionUI(question);
-  }
+  await fetchAndRenderQuestion();
 
   /**
-   *
-   * @param {EventTarget} e
+   * Checks whether the answer selected by the user is correct,
+   * dispatching the result on an Event called 'answerResult'
+   * @param {EventTarget} event
    */
   async function onSubmitAnswer(event) {
     event.preventDefault();
@@ -59,6 +40,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error submitting answer:', error);
     }
   }
+});
+
+document.addEventListener('answerResult', async (event) => {
+  const { bgColor, message, style } = getAnswerUIInformation(
+    event.detail.isCorrect
+  );
+  const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+  const selectedLabel = selectedAnswer.parentElement.querySelector('label');
+  const answersContainer = document.getElementById('answers');
+  const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
+  const submitBtn = document.querySelector('#confirm');
+  const messageBox = document.querySelector('#message');
+
+  toggleButtonsDisableState();
+  printMessage(message, style);
+
+  await renderAnswerLabelEffect();
+  if (event.detail.isCorrect) {
+    await fetchAndRenderQuestion();
+    toggleButtonsDisableState();
+    resetUI();
+  }
 
   /**
    * Prints a message to the user, also style it accordingly
@@ -66,29 +69,54 @@ document.addEventListener('DOMContentLoaded', async () => {
    * @param {string} style Optional CSS/Bootstrap class
    */
   function printMessage(message, style = null) {
-    const messageBox = document.querySelector('#message');
     messageBox.textContent = message;
     if (style) {
       messageBox.classList.add(style);
     }
   }
 
-  async function renderSuccessEffect(rightAnswer) {
-    const button = answersInputs.find(
-      (answer) => answer.innerHTML === rightAnswer
-    );
-    // TODO
+  async function renderAnswerLabelEffect() {
+    let index = 0;
+    // const initialBg = selectedLabel.style.backgroundColor;
+    const flash = setInterval(() => {
+      selectedLabel.parentNode.style.backgroundColor = bgColor[index];
+      index = (index + 1) % bgColor.length;
+    }, 500);
+    await delayFunction(4000);
+    clearInterval(flash);
+    selectedLabel.parentNode.style.backgroundColor = 'transparent';
+  }
+
+  function getAnswerUIInformation(isCorrect) {
+    return {
+      bgColor: isCorrect ? ['lightgreen', 'green'] : ['crimson', 'lightcoral'],
+      message: isCorrect
+        ? 'Your answer is correct! Keep going! 👏'
+        : "Unfortunately, that's not the right answer 😟. Go again!",
+      style: isCorrect ? 'alert-success' : 'alert-danger',
+    };
   }
 
   /**
    * Helper function to disable all buttons once the player answers a question wrong
    */
-  function disableAllButtons() {
-    const submitBtn = document.querySelector('#confirm');
-
-    answersInputs.forEach((input) => (input.disabled = true));
-    submitBtn.disabled = true;
+  function toggleButtonsDisableState() {
+    answersInputs.forEach((input) => (input.disabled = !input.disabled));
+    submitBtn.disabled = !submitBtn.disabled;
   }
+
+  function resetUI() {
+    // Only called in a correct answer scenario.
+    const { style } = getAnswerUIInformation(true);
+    messageBox.textContent = '';
+    messageBox.classList.remove(style);
+    answersInputs.forEach((input) => (input.checked = false));
+  }
+});
+
+async function fetchAndRenderQuestion() {
+  const question = await getQuestion();
+  setQuestionUI(question);
 
   /**
    * Fetches a question from the backend.
@@ -105,6 +133,13 @@ document.addEventListener('DOMContentLoaded', async () => {
    * @param {{question:string, answers: string[]}} Data The question text and answers.
    */
   function setQuestionUI({ question, answers }) {
+    const answersContainer = document.getElementById('answers');
+    const labels = Array.from(answersContainer.querySelectorAll('label'));
+    const answersInputs = Array.from(
+      answersContainer.querySelectorAll('input')
+    );
+    const questionText = document.getElementById('question');
+
     questionText.innerHTML = question;
 
     answers.forEach((answer, i) => {
@@ -112,26 +147,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       labels[i].innerHTML = answer;
     });
   }
+}
 
-  /**
-   * A utility function to pause the execution of a function, to avoid API time constraint.
-   * @param {number} delay The delay amount in ms.
-   * @returns A promise that will resolve once the delay elapsed.
-   */
-  function delayFunction(delay) {
-    return new Promise((resolve) => setTimeout(resolve, delay));
-  }
-});
-
-document.addEventListener('answerResult', (event) => {
-  const isCorrect = event.detail.isCorrect;
-  const selectedAnswer = document.querySelector('input[name="answer"]:checked');
-  if (selectedAnswer) {
-    selectedAnswer.parentElement.style.backgroundColor = isCorrect
-      ? 'lightgreen'
-      : 'lightcoral';
-    setTimeout(() => {
-      selectedAnswer.parentElement.style.backgroundColor = ''; // Reset background color after 3 seconds
-    }, 3000);
-  }
-});
+/**
+ * A utility function to pause the execution of a function, to avoid API time constraint.
+ * @param {number} delay The delay amount in ms.
+ * @returns A promise that will resolve once the delay elapsed.
+ */
+function delayFunction(delay) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
