@@ -127,15 +127,17 @@ async function fetchAndRenderQuestion() {
 
   /**
    * Renders a given question to the page form.
-   * @param {{question:string, answers: string[]}} Data The question text and answers.
+   * @param {{question:string, answers: string[], questionsAnswered: number}} Data The question text and answers.
    */
-  function setQuestionUI({ question, answers }) {
+  function setQuestionUI({ question, answers, questionsAnswered }) {
     const answersContainer = document.getElementById('answers');
     const labels = Array.from(answersContainer.querySelectorAll('label'));
     const answersInputs = Array.from(
       answersContainer.querySelectorAll('input')
     );
     const questionText = document.getElementById('question');
+    const levelText = document.querySelector('h5.featured');
+    levelText.textContent = `Level ${questionsAnswered + 1}`;
 
     questionText.innerHTML = question;
 

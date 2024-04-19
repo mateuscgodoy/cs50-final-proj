@@ -55,10 +55,8 @@ router.get('/rules', (req, res) => {
 });
 
 router.get('/game', hasToken, (req, res) => {
-  const level = req.session.user.questionsAnswered + 1;
   res.render('game', {
     title: 'Trivia50 - Game',
-    level,
   });
 });
 

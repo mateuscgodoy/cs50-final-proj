@@ -175,15 +175,16 @@ function delayFunction(delay) {
 /**
  * Transforms the complete question data version to be presented on the frontend.
  * @param {Object} questionData The question object as received from the API
- * @returns {question: string, answers: string[], answered: string}
+ * @param {number} questionsAnswered The amount of questions answered by the user so far
+ * @returns {question: string, answers: string[], answered: string, questionsAnswered: number}
  */
-function getFrontendQuestion(questionData) {
+function getFrontendQuestion(questionData, questionsAnswered) {
   const { correct_answer, incorrect_answers, question, answered } =
     questionData;
   const size = incorrect_answers.length + 1;
   const randomIndex = Math.floor(Math.random() * size);
   const answers = incorrect_answers.toSpliced(randomIndex, 0, correct_answer);
-  return { question, answers, answered };
+  return { question, answers, questionsAnswered };
 }
 
 module.exports = {
