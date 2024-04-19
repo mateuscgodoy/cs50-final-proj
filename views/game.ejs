@@ -4,28 +4,38 @@
 
   <body class="body d-flex flex-column justify-content-center">
     <main class="main-game">
-      <form class="question-container" action="/answer" method="post">
-        <div id="question">Loading...</div>
-        <div id="answers">
-          <div class="answer-div">
-            <input type="radio" class="btn-check" name="answer" id="a" autocomplete="off">
-            <label class="btn btn-outline-secondary" for="a"></label>
-          </div>
-          <div class="answer-div">
-            <input type="radio" class="btn-check" name="answer" id="b" autocomplete="off">
-            <label class="btn btn-outline-secondary" for="b"></label>
-          </div>
-          <div class="answer-div">
-            <input type="radio" class="btn-check" name="answer" id="c" autocomplete="off">
-            <label class="btn btn-outline-secondary" for="c"></label>
-          </div>
-          <div class="answer-div">
-            <input type="radio" class="btn-check" name="answer" id="d" autocomplete="off">
-            <label class="btn btn-outline-secondary" for="d"></label>
-          </div>
+      <div class="card">
+        <h5 class="card-header">Level <%= level %>
+        </h5>
+        <div class="card-body">
+          <form class="question-container" action="/answer" method="post">
+            <div id="question">Loading...</div>
+            <div id="answers">
+              <div class="answer-div">
+                <input type="radio" class="btn-check" name="answer" id="a" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="a"></label>
+              </div>
+              <div class="answer-div">
+                <input type="radio" class="btn-check" name="answer" id="b" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="b"></label>
+              </div>
+              <div class="answer-div">
+                <input type="radio" class="btn-check" name="answer" id="c" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="c"></label>
+              </div>
+              <div class="answer-div">
+                <input type="radio" class="btn-check" name="answer" id="d" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="d"></label>
+              </div>
+            </div>
+            <button class="btn btn-warning" id="confirm" type="submit">Confirm</button>
+          </form>
         </div>
-        <button class="btn btn-warning" id="confirm" type="submit">Confirm</button>
-      </form>
+        <div class="card-footer text-body-secodary">
+          Timer will go here
+        </div>
+      </div>
+
       <p id="message" class="mt-5 alert"></p>
     </main>
     <%- include('includes/footer.ejs') %>

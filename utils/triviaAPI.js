@@ -177,13 +177,13 @@ function delayFunction(delay) {
  * @param {Object} questionData The question object as received from the API
  * @returns {question: string, answers: string[], answered: string}
  */
-function getFrontendQuestion(questionData, questionsAnswered) {
+function getFrontendQuestion(questionData) {
   const { correct_answer, incorrect_answers, question, answered } =
     questionData;
   const size = incorrect_answers.length + 1;
   const randomIndex = Math.floor(Math.random() * size);
   const answers = incorrect_answers.toSpliced(randomIndex, 0, correct_answer);
-  return { question, answers, answered, questionsAnswered };
+  return { question, answers, answered };
 }
 
 module.exports = {
