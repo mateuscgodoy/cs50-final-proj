@@ -51,6 +51,13 @@ router.post('/answer', hasToken, hasQuestion, (req, res, next) => {
   const { answer } = req.body;
   const isCorrect = req.session.question.correct_answer === answer;
 
+  if (!isCorrect) {
+    req.session.destroy(function (err) {
+      if (err) next(err);
+      else return res.status(200).send({ isCorrect });
+    });
+  }
+
   req.session.regenerate(function (err) {
     if (err) next(err);
     else req.session.user = user;
