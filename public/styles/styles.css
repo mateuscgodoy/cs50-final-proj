@@ -82,17 +82,19 @@ footer {
 .question-container {
   display: flex;
   flex-direction: column;
-  width: 500px;
-  margin: 0 auto;
   gap: 20px;
 }
 
 #question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 125px;
   padding: 10px;
   background-color: darkslategray;
   color: greenyellow;
   border-radius: 1rem;
+  font-size: 1.25rem;
 }
 
 #answers {
@@ -149,6 +151,17 @@ footer {
   font-size: 20px;
 }
 
+.featured {
+  background-color: darkslategrey;
+  color: white;
+}
+
+.card-content {
+  background-color: transparent;
+  border-left: 5px solid darkslategrey;
+  border-right: 5px solid darkslategrey;
+}
+
 @media (min-width: 1000px) {
 
   .hero>p,
@@ -159,6 +172,11 @@ footer {
 
   .lg-width {
     width: 50%;
+    margin: 0 auto;
+  }
+
+  .question-container {
+    width: 500px;
     margin: 0 auto;
   }
 }
@@ -173,6 +191,11 @@ footer {
 
   .lg-width {
     width: 50%;
+    margin: 0 auto;
+  }
+
+  .question-container {
+    width: 500px;
     margin: 0 auto;
   }
 }
