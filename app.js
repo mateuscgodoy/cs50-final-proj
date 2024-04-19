@@ -36,9 +36,11 @@ app.use((req, res) => {
 
 app.use((error, req, res, next) => {
   const status = error.status || 500;
+  console.error(error.message);
   res.status(status).render('error', {
     title: `Error ${status}`,
-    message: error.message,
+    message:
+      'The content that you tried to access is unavailable at the moment.',
   });
 });
 
