@@ -117,6 +117,7 @@ document.addEventListener('answerResult', async (event) => {
 async function fetchAndRenderQuestion() {
   const question = await getQuestion();
   setQuestionUI(question);
+  startTimer(90);
 
   /**
    * Fetches a question from the backend.
@@ -146,6 +147,37 @@ async function fetchAndRenderQuestion() {
       answersInputs[i].value = answer;
       labels[i].innerHTML = answer;
     });
+  }
+
+  function startTimer(duration) {
+    const timerBar = document.querySelector('.timer-bar');
+    const timerCounter = document.querySelector('.timer-counter');
+    const timerIcon = document.querySelector('.timer-icon');
+
+    let timeLeft = duration;
+    const interval = 1000; // Update interval in milliseconds
+
+    const timerInterval = setInterval(() => {
+      timeLeft -= interval / 1000; // Convert milliseconds to seconds
+
+      // Calculate width of timer bar
+      const timerWidth = (timeLeft / duration) * 100;
+      timerBar.style.width = timerWidth + '%';
+
+      // Update timer counter
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = Math.floor(timeLeft % 60);
+      timerCounter.textContent = `${minutes}:${
+        seconds < 10 ? '0' : ''
+      }${seconds}`;
+
+      // Stop timer when time runs out
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        timerCounter.textContent = "time's up!";
+        timerIcon.textContent = '⏰'; // Optionally change icon when time runs out
+      }
+    }, interval);
   }
 }
 
