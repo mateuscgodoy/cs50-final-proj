@@ -28,18 +28,24 @@ router.get('/categories', async (req, res) => {
 
 router.get('/question', hasToken, async (req, res, next) => {
   try {
-    const { user } = req.session;
+    const { user, question } = req.session;
+    let current = question;
+    if (!current) {
+      current = await fetchTriviaQuestion(user);
+      current.display = getFrontendQuestion(current);
+    }
+
     req.session.regenerate(function (err) {
       if (err) next(err);
-      else req.session.user = user;
+      else {
+        req.session.user = user;
+        req.session.question = current;
+      }
     });
 
-    const question = req.session.question || (await fetchTriviaQuestion(user));
-    question.display = question.display || getFrontendQuestion(question);
-    req.session.question = question;
     req.session.save(function (err) {
       if (err) next(err);
-      else res.send(question.display);
+      else res.send(current.display);
     });
   } catch (error) {
     next(error);
