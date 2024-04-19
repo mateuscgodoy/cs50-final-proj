@@ -117,6 +117,7 @@ document.addEventListener('answerResult', async (event) => {
 async function fetchAndRenderQuestion() {
   const question = await getQuestion();
   setQuestionUI(question);
+  console.log(question);
 
   /**
    * Fetches a question from the backend.

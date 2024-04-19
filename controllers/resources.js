@@ -32,7 +32,7 @@ router.get('/question', hasToken, async (req, res, next) => {
     let current = question;
     if (!current) {
       current = await fetchTriviaQuestion(user);
-      current.display = getFrontendQuestion(current);
+      current.display = getFrontendQuestion(current, user.questionsAnswered);
     }
 
     req.session.regenerate(function (err) {
@@ -66,7 +66,10 @@ router.post('/answer', hasToken, hasQuestion, (req, res, next) => {
 
   req.session.regenerate(function (err) {
     if (err) next(err);
-    else req.session.user = user;
+    else {
+      user.questionsAnswered++;
+      req.session.user = user;
+    }
   });
 
   req.session.save(function (err) {
