@@ -47,7 +47,6 @@ document.addEventListener('answerResult', async (event) => {
     event.detail.isCorrect
   );
   const selectedAnswer = document.querySelector('input[name="answer"]:checked');
-  const selectedLabel = selectedAnswer.parentElement.querySelector('label');
   const answersContainer = document.getElementById('answers');
   const answersInputs = Array.from(answersContainer.querySelectorAll('input'));
   const submitBtn = document.querySelector('#confirm');
@@ -61,6 +60,8 @@ document.addEventListener('answerResult', async (event) => {
     await fetchAndRenderQuestion();
     toggleButtonsDisableState();
     resetUI();
+  } else {
+    messageBox.innerHTML += "<a class='link' href='/'>Go again!</a>";
   }
 
   /**
@@ -77,14 +78,13 @@ document.addEventListener('answerResult', async (event) => {
 
   async function renderAnswerLabelEffect() {
     let index = 0;
-    // const initialBg = selectedLabel.style.backgroundColor;
     const flash = setInterval(() => {
-      selectedLabel.parentNode.style.backgroundColor = bgColor[index];
+      selectedAnswer.parentNode.style.backgroundColor = bgColor[index];
       index = (index + 1) % bgColor.length;
     }, 500);
     await delayFunction(4000);
     clearInterval(flash);
-    selectedLabel.parentNode.style.backgroundColor = 'transparent';
+    selectedAnswer.parentNode.style.backgroundColor = 'transparent';
   }
 
   function getAnswerUIInformation(isCorrect) {
@@ -92,7 +92,7 @@ document.addEventListener('answerResult', async (event) => {
       bgColor: isCorrect ? ['lightgreen', 'green'] : ['crimson', 'lightcoral'],
       message: isCorrect
         ? 'Your answer is correct! Keep going! 👏'
-        : "Unfortunately, that's not the right answer 😟. Go again!",
+        : "Unfortunately, that's not the right answer 😟.",
       style: isCorrect ? 'alert-success' : 'alert-danger',
     };
   }
